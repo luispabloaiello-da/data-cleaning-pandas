@@ -29,6 +29,10 @@ def clean_country_state(df: pd.DataFrame) -> pd.DataFrame:
     df['State'] = df['State'].str.title().str.strip()
     return df
 
+# Filters the input DataFrame to include only rows where Country is 'AUSTRALIA' or 'USA'
+def filter_aus_usa(df: pd.DataFrame) -> pd.DataFrame:
+    return df[df['Country'].str.upper().isin(['AUSTRALIA', 'USA'])]
+
 # Convert 'Date' from strings (or other formats) to pandas datetime object
 # Convert 'Year' to integer, handle missing/invalid as NaN
 def clean_date_year(df: pd.DataFrame) -> pd.DataFrame:
@@ -63,10 +67,6 @@ def map_fatal(df: pd.DataFrame) -> pd.DataFrame:
     df['Fatal_Y/N'] = df['Fatal_Y/N'].apply(clean_fatal_yn)
     return df
 
-# def map_fatal(df: pd.DataFrame) -> pd.DataFrame:
-#     df['Fatal'] = df['Fatal_Y/N'].str.upper().map({'Y': 1, 'N': 0})
-#     return df
-
 def main_cleaning(df: pd.DataFrame) -> pd.DataFrame:
     columns_to_drop = ['Unnamed: 21', 'Unnamed: 22', 'pdf', 'href formula', 'href', 'Case Number', 'Case Number.1', 'original order', 'Source']
     # df = load_data(file_path)
@@ -74,6 +74,7 @@ def main_cleaning(df: pd.DataFrame) -> pd.DataFrame:
     df = standardize_columns(df)
     df = filter_surfing_attacks(df)
     df = clean_country_state(df)
+    df = filter_aus_usa
     df = clean_date_year(df)
     df = clean_sex_column(df)
     df = map_fatal(df)
